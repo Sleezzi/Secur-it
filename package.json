@@ -1,0 +1,32 @@
+{
+  "name": "grab-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node builder.js && tsc && cd build && node index && cd ..",
+    "build": "node builder.js && tsc"
+  },
+  "keywords": [],
+  "author": "Sleezzi",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.18.0",
+    "tsc": "^2.0.4",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "discord.js": "^14.18.0",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "firebase-admin": "^13.1.0",
+    "uuid": "^11.0.5",
+    "ws": "^8.18.1"
+  }
+}
