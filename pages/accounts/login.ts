@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import { Database, Pages } from "../../interfacies";
+import { v4 as uuid } from "uuid";
 
 const page: Pages = {
 	method: "PUT",
@@ -30,28 +31,19 @@ const page: Pages = {
 				});
 				return;
 			}
-			const account = await client.database.get(`/accounts/${body.username.toLowerCase()}`) as Database["accounts"][""];
-			
-			if (!account) {
-				response.status(400).json({
+			const account = await client.login(body.username, body.password);
+			if (!account.success) {
+				response.status(200).json({
 					code: 400,
-					message: "Invalid username or password"
+					message: account.message,
 				});
-				return;
-			}
-			if (!bcrypt.compareSync(body.password, account.mdp)) {
-				response.status(400).json({
-					code: 400,
-					message: "Invalid username or password"
-				});
-				return;
 			}
 			
 			response.status(200).json({
 				code: 200,
 				message: "Success",
 				args: {
-					token: account.jwt
+					token: account.message
 				}
 			});
 		} catch (err) {

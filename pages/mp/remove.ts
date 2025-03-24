@@ -2,7 +2,7 @@ import { Pages } from "../../interfacies";
 
 const page: Pages = {
 	method: "WS",
-	name: "postMessage",
+	name: "messages/remove",
 	async execute(client, message, value) {
 		try {
 			

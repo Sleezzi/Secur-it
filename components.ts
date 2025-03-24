@@ -38,30 +38,31 @@ export function ParseColor(log: string) {
 	.replace(/\%yellow\%/g, "\x1b[93m")
 }
 
-export function grenerateToken(length: number) {
-	const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_0123456789";
-	let result = "";
-	for (let i = 0; i < length; i++) {
-		result += characters.charAt(Math.floor(Math.random() * characters.length));
+export function grenerateToken(length: number): string {
+	try {
+		const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_0123456789";
+		let result = "";
+		for (let i = 0; i < length; i++) {
+			result += characters.charAt(Math.floor(Math.random() * characters.length));
+		}
+		return result;
+	} catch (err) {
+		console.error(err);
+		return "";
 	}
-	return result;
 }
 
 export const navigate = (path: string, callback: (path: string) => any) => {
-	for (const file of readdirSync(path, { withFileTypes: true, encoding: "utf-8" })) {
-		if (file.isFile()) {
-			callback(`${file.parentPath}/${file.name}`);
+	try {
+		for (const file of readdirSync(path, { withFileTypes: true, encoding: "utf-8" })) {
+			if (file.isFile()) {
+				callback(`${file.parentPath}/${file.name}`);
+			}
+			if (file.isDirectory()) {
+				navigate(`${file.parentPath}/${file.name}`, callback);
+			}
 		}
-		if (file.isDirectory()) {
-			navigate(`${file.parentPath}/${file.name}`, callback);
-		}
+	} catch (err) {
+		console.error(err);
 	}
-}
-
-export async function authenticate(client: Client, token?: string) {
-	if (!token) return false;
-	const accounts = await client.database.get(`/accounts`) as Database["accounts"];
-	const account = Object.entries(accounts).filter(([username, account]) => account.jwt === token);
-	if (!account) return false;
-	return true;
 }

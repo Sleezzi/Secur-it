@@ -1,25 +1,15 @@
 import { grenerateToken } from "../../components";
-import { Pages } from "../../interfacies";
+import { Database, Pages } from "../../interfacies";
 import bcrypt from "bcrypt";
 
 const page: Pages = {
 	method: "POST",
 	async execute(request, response, client) {
 		try {
-			const admin_token = request.headers.authorization;
-			if (!admin_token || admin_token !== `Bearer ${client.config.token}`) {
-				console.log(!admin_token, admin_token, `Bearer ${client.config.token}`);
-				
-				response.status(400).json({
-					code: 400,
-					message: "Unauthorized",
-				});
-				return;
-			}
-
 			const body: {
 				username?: string,
-				password?: string
+				valid_password?: string
+				killer_password?: string
 			} | null = request.body;
 			if (!body) {
 				response.status(400).json({
@@ -35,19 +25,32 @@ const page: Pages = {
 				});
 				return;
 			}
-			if (!body.password || typeof body.password !== "string") {
+			if (!body.valid_password || typeof body.valid_password !== "string") {
 				response.status(400).json({
 					code: 400,
 					message: "Invalid password"
 				});
 				return;
 			}
-			const hash = await bcrypt.hash(body.password, await bcrypt.genSalt(10));
+			if (!body.killer_password || typeof body.killer_password !== "string") {
+				response.status(400).json({
+					code: 400,
+					message: "Invalid password"
+				});
+				return;
+			}
+			const valid_hash = await bcrypt.hash(body.valid_password, await bcrypt.genSalt(10));
+			const killer_hash = await bcrypt.hash(body.killer_password, await bcrypt.genSalt(10));
 			const token = grenerateToken(25);
 			client.database.set(`/accounts/${body.username.toLowerCase()}`, {
-				hash,
-				token
-			});
+				friends: [],
+				mdp: {
+					valid: valid_hash,
+					killer: killer_hash
+				},
+				online: true,
+				token,
+			} as Database["accounts"][""]);
 
 			response.status(200).json({
 				code: 200,
