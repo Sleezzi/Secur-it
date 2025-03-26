@@ -1,6 +1,4 @@
-import bcrypt from "bcrypt";
-import { Database, Pages } from "../../interfacies";
-import { v4 as uuid } from "uuid";
+import { Pages } from "../../interfacies";
 
 const page: Pages = {
 	method: "PUT",
@@ -42,9 +40,7 @@ const page: Pages = {
 			response.status(200).json({
 				code: 200,
 				message: "Success",
-				args: {
-					token: account.message
-				}
+				args: account.message
 			});
 		} catch (err) {
 			console.error(err);

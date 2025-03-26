@@ -18,32 +18,69 @@ const page: Pages = {
 				});
 				return;
 			}
-			if (!body.username || typeof body.username !== "string") {
+			
+			if (!body.username) {
+				response.status(400).json({
+					code: 400,
+					message: "Missing username"
+				});
+				return;
+			}
+			if (typeof body.username !== "string" || body.username.length > 10 || /systeme?/.test(body.username.toLowerCase())) {
 				response.status(400).json({
 					code: 400,
 					message: "Invalid username"
 				});
 				return;
 			}
-			if (!body.valid_password || typeof body.valid_password !== "string") {
+			if (!body.valid_password) {
+				response.status(400).json({
+					code: 400,
+					message: "Missing valid password"
+				});
+				return;
+			}
+			if (typeof body.valid_password !== "string" || body.username.length > 20) {
 				response.status(400).json({
 					code: 400,
 					message: "Invalid password"
 				});
 				return;
 			}
-			if (!body.killer_password || typeof body.killer_password !== "string") {
+			if (!body.killer_password) {
 				response.status(400).json({
 					code: 400,
-					message: "Invalid password"
+					message: "Invalid killer password"
 				});
 				return;
 			}
+			if (typeof body.killer_password !== "string" || body.username.length > 20) {
+				response.status(400).json({
+					code: 400,
+					message: "Invalid killer password"
+				});
+				return;
+			}
+			if (body.valid_password === body.killer_password) {
+				response.status(400).json({
+					code: 400,
+					message: "The killer password and the valid password can't be same"
+				});
+				return;
+			}
+			if (Object.entries(await client.database.get(`/accounts/${body.username}`)).length > 0) {
+				response.status(400).json({
+					code: 400,
+					message: "Invalid username",
+				});
+				return;
+			}
+			
 			const valid_hash = await bcrypt.hash(body.valid_password, await bcrypt.genSalt(10));
 			const killer_hash = await bcrypt.hash(body.killer_password, await bcrypt.genSalt(10));
 			const token = grenerateToken(25);
 			client.database.set(`/accounts/${body.username.toLowerCase()}`, {
-				friends: [],
+				friends: {},
 				mdp: {
 					valid: valid_hash,
 					killer: killer_hash
@@ -55,9 +92,7 @@ const page: Pages = {
 			response.status(200).json({
 				code: 200,
 				message: "Account created",
-				args: {
-					token: token
-				}
+				args: token
 			});
 		} catch (err) {
 			console.error(err);

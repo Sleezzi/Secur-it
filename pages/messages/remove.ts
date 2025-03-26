@@ -2,8 +2,7 @@ import { Pages } from "../../interfacies";
 
 const page: Pages = {
 	method: "WS",
-	name: "messages/remove",
-	async execute(client, message, value) {
+	async execute(client, username, message, reply, send) {
 		try {
 			
 		} catch (err) {

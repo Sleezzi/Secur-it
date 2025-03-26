@@ -1,5 +1,6 @@
 import { readdirSync } from "fs";
-import { Client, Database } from "./interfacies";
+import { Database } from "./interfacies";
+import Client from "./client";
 
 export const Log = (...args: Array<any>) => {
 	args.forEach((log: any) => {

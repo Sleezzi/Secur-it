@@ -1,0 +1,83 @@
+import { Pages, Database } from "../../interfacies";
+import { v4 as uuid } from "uuid";
+
+const page: Pages = {
+	method: "WS",
+	async execute(client, username, message, reply, send) {
+		try {
+			if (!message.args) {
+				reply("Error", "Missing args");
+				return;
+			}
+			const { content, channel }: { content: string, channel: {
+				type: "SERVER" | "MP",
+				recipent: string,
+				id: string
+			}} = message.args;
+			if (typeof content !== "string" || content.length > 250) {
+				reply("Error", "Invalid message content");
+				return;
+			}
+			if (!channel.type || channel.type.toUpperCase() !== "SERVER" && channel.type.toUpperCase() !== "MP") {
+				reply("Error", "Invalid \"to\" type");
+				return;
+			}
+			if (!channel.id || typeof channel.id !== "string" || !channel.recipent || typeof channel.recipent !== "string") {
+				reply("Error", "Invalid \"id\" type");
+				return;
+			}
+			if (channel.type === "SERVER") {
+				const server: Database["servers"][""] = await client.database.get(`/servers/${channel.recipent}`);
+				if (!server) {
+					reply("Error", "Server not found");
+					return;
+				}
+				if (!server.members.find((user) => user.username === username)) {
+					reply("Error", "Server not found");
+					return;
+				}
+				client.database.set(`/servers/${channel.recipent}/messages/${uuid()}`, {
+					message: content,
+					user: username,
+					date: Date.now() / 1000
+				} as Database["servers"][""]["messages"][""]);
+				return;
+			}
+			if (channel.type === "MP") {
+				const friend = Object.entries(
+					(await client.database.get(`/accounts/${username}/friends/list`) as string[]) || {}
+				).find(([user, mp]) => mp === channel.recipent);
+				if (!friend) {
+					reply("Error", "Channel not found");
+					return;
+				}
+				const recipent: Database["mp"][""] = await client.database.get(`/mp/${channel.recipent}`);
+				if (!recipent) {
+					reply("Error", "Channel not found");
+					return;
+				}
+				const id = uuid();
+				client.database.set(`/mp/${channel.recipent}/${id}`, {
+					message: content,
+					user: username,
+					date: Math.floor(Date.now() / 1000)
+				} as Database["mp"][""][""]);
+				send(friend[1], {
+					id: "New message",
+					args: {
+						id,
+						message: content,
+						user: username,
+						date: Date.now() / 1000
+					}
+				});
+				return;
+			}
+			reply("Success", "Message posted");
+		} catch (err) {
+			console.error(err);
+		}
+	},
+}
+
+module.exports = page;
