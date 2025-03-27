@@ -75,7 +75,7 @@ class Client {
 						this.database.delete(`/mp/${mp}/${id}`);
 					}
 					this.database.set(`/mp/${mp}/_${uuid()}`, {
-						message: `The account of "${username.toLowerCase()}" has been reset.`,
+						message: `The account of "${username}" has been reset.`,
 						user: "system",
 						saved: false,
 						date: 0
@@ -108,7 +108,7 @@ class Client {
 	};
 	authenticate = async (username: string, token: string): Promise<{success: false, message: string} | { success: true, account: Database["accounts"][""] }> => {
 		try {
-			const account: Database["accounts"][""] = await this.database.get(`/accounts/${username}`);
+			const account: Database["accounts"][""] = await this.database.get(`/accounts/${username.toLowerCase()}`);
 			if (!account) return {
 				success: false,
 				message: "Invalid token"

@@ -12,16 +12,16 @@ const page: Pages = {
 				reply("Error", "Invalid name format.");
 				return;
 			}
-			const user: Database["accounts"][""] | null = await client.database.get(`/accounts/${message.args}`);
+			const user: Database["accounts"][""] | null = await client.database.get(`/accounts/${message.args.toLowerCase()}`);
 			if (!user) {
 				reply("Error", "The requested user does not exist.");
 				return;
 			}
-			if (user.blocked && user.blocked.find(name => username)) {
+			if (user.blocked && user.blocked.find(name => name === username.toLowerCase())) {
 				reply("Error", "The requested user does not exist.");
 				return;
 			}
-			if (user.friends?.request.find((friend) => friend === username)) {
+			if (user.friends?.request.find((friend) => friend === username.toLowerCase())) {
 				reply("Error", "You've already friend requested this person. Wait for them to accept your request.");
 				return;
 			}
@@ -29,13 +29,13 @@ const page: Pages = {
 				reply("Error", "You are already friends with this person.");
 				return;
 			}
-			let list: string[] | null = await client.database.get(`/accounts/${message.args}/friends/request`);
+			let list: string[] | null = await client.database.get(`/accounts/${message.args.toLowerCase()}/friends/request`);
 			if (list?.length) list = [];
-			client.database.set(`/accounts/${message.args}/friends/request/${list?.length || 0}`, username);
-			send(message.args, {
+			client.database.set(`/accounts/${message.args.toLowerCase()}/friends/request/${list?.length || 0}`, username.toLowerCase());
+			send(message.args.toLowerCase(), {
 				id: "Friend request",
-				args: username
-			})
+				args: username.toLowerCase()
+			});
 		} catch (err) {
 			console.error(err);
 		}

@@ -25,7 +25,7 @@ async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebS
 			return;
 		}
 		const account = isValid.account;
-		client.database.set(`/accounts/${username}/online`, true);
+		client.database.set(`/accounts/${username.toLowerCase()}/online`, true);
 
 		ws.send(JSON.stringify({
 			id: "Connection",
@@ -36,7 +36,8 @@ async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebS
 			try {
 				const message: {
 					id: string,
-					args?: any
+					args?: any,
+					request_id?: string
 				} = JSON.parse(raw.toString());
 				
 				if (!message.id) {
@@ -60,6 +61,7 @@ async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebS
 							JSON.stringify({
 								id,
 								args,
+								request_id: message.request_id || null,
 								origin: file.name
 							})
 						);
@@ -88,7 +90,7 @@ async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebS
 		});
 		ws.once("close", () => {
 			try {
-				client.database.set(`/accounts/${username}/online`, false);
+				client.database.set(`/accounts/${username.toLowerCase()}/online`, false);
 			} catch (err) {
 				console.error(err);
 			}

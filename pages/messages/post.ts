@@ -32,20 +32,20 @@ const page: Pages = {
 					reply("Error", "Server not found");
 					return;
 				}
-				if (!server.members.find((user) => user.username === username)) {
+				if (!server.members.find((user) => user.username === username.toLowerCase())) {
 					reply("Error", "Server not found");
 					return;
 				}
 				client.database.set(`/servers/${channel.recipent}/messages/${uuid()}`, {
 					message: content,
-					user: username,
+					user: username.toLowerCase(),
 					date: Date.now() / 1000
 				} as Database["servers"][""]["messages"][""]);
 				return;
 			}
 			if (channel.type === "MP") {
 				const friend = Object.entries(
-					(await client.database.get(`/accounts/${username}/friends/list`) as string[]) || {}
+					(await client.database.get(`/accounts/${username.toLowerCase()}/friends/list`) as string[]) || {}
 				).find(([user, mp]) => mp === channel.recipent);
 				if (!friend) {
 					reply("Error", "Channel not found");
@@ -59,15 +59,15 @@ const page: Pages = {
 				const id = uuid();
 				client.database.set(`/mp/${channel.recipent}/${id}`, {
 					message: content,
-					user: username,
+					user: username.toLowerCase(),
 					date: Math.floor(Date.now() / 1000)
 				} as Database["mp"][""][""]);
-				send(friend[1], {
+				send(friend[1].toLowerCase(), {
 					id: "New message",
 					args: {
 						id,
 						message: content,
-						user: username,
+						user: username.toLowerCase(),
 						date: Date.now() / 1000
 					}
 				});
