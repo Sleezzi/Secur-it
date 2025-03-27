@@ -33,18 +33,18 @@ export type Pages = PagesWS | PagesExpress;
 export interface Database {
 	accounts: {
 		[username: string] : {
+			avatar?: string;
 			mdp: {
 				valid: string;
-				killer: string
+				killer: string;
 			};
 			token: string;
 			admin?: boolean;
 			friends?: {
-				list: {
-					user: string
-				};
+				list: string[];
 				request: string[];
 			};
+			blocked: string[];
 			online: boolean;
 		};
 	};

@@ -4,27 +4,33 @@ import Client from "./client";
 
 async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebSocket, request: IncomingMessage) {
 	try {
-		const params = request.url?.split("?")[1];
-		if (!params) {
+		if (!request.url?.split("?")[1]) {
 			ws.close();
 			return;
 		}
-		const username = new URLSearchParams(params).get("username");
+		const params = new URLSearchParams(request.url?.split("?")[1])
+		const username = params.get("username");
 		if (!username) {
 			ws.close();
 			return;
 		}
-		if (!request.headers.authorization) {
+		const token = params.get("token");
+		if (!token) {
 			ws.close();
 			return;
 		}
-		const isValid = await client.authenticate(username, request.headers.authorization);
+		const isValid = await client.authenticate(username, token);
 		if (!isValid.success) {
 			ws.close();
 			return;
 		}
 		const account = isValid.account;
 		client.database.set(`/accounts/${username}/online`, true);
+
+		ws.send(JSON.stringify({
+			id: "Connection",
+			args: "Success"
+		}));
 
 		ws.on("message", (raw) => {
 			try {

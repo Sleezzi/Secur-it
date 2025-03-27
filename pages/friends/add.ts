@@ -17,6 +17,10 @@ const page: Pages = {
 				reply("Error", "The requested user does not exist.");
 				return;
 			}
+			if (user.blocked && user.blocked.find(name => username)) {
+				reply("Error", "The requested user does not exist.");
+				return;
+			}
 			if (user.friends?.request.find((friend) => friend === username)) {
 				reply("Error", "You've already friend requested this person. Wait for them to accept your request.");
 				return;
