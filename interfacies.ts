@@ -40,8 +40,10 @@ export interface Database {
 			};
 			token: string;
 			admin?: boolean;
-			friends?: {
-				list: string[];
+			friends: {
+				list: {
+					[user: string]: string
+				};
 				request: string[];
 			};
 			blocked: string[];

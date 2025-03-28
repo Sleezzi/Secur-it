@@ -41,7 +41,7 @@ export function ParseColor(log: string) {
 
 export function grenerateToken(length: number): string {
 	try {
-		const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_0123456789";
+		const characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_";
 		let result = "";
 		for (let i = 0; i < length; i++) {
 			result += characters.charAt(Math.floor(Math.random() * characters.length));

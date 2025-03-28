@@ -1,6 +1,7 @@
 import { WebSocket, WebSocketServer } from "ws";
 import { IncomingMessage } from "http";
 import Client from "./client";
+import { Log } from "./components";
 
 async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebSocket, request: IncomingMessage) {
 	try {
@@ -31,6 +32,8 @@ async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebS
 			id: "Connection",
 			args: "Success"
 		}));
+		
+		Log(`%green%${username}%reset% connected`);
 
 		ws.on("message", (raw) => {
 			try {
@@ -43,7 +46,8 @@ async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebS
 				if (!message.id) {
 					ws.send(JSON.stringify({
 						id: "error",
-						args: "Invalid message"
+						args: "Invalid message",
+						request_id: message.request_id || null
 					}));
 					return;
 				}
@@ -51,7 +55,8 @@ async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebS
 				if (!file) {
 					ws.send(JSON.stringify({
 						id: "error",
-						args: "Invalid message"
+						args: "Invalid message",
+						request_id: message.request_id || null
 					}));
 					return;
 				}

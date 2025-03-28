@@ -26,7 +26,7 @@ const page: Pages = {
 				});
 				return;
 			}
-			if (typeof body.username !== "string" || body.username.length > 10 || /systeme?/.test(body.username.toLowerCase())) {
+			if (typeof body.username !== "string" || body.username.length > 15 || /systeme?/.test(body.username.toLowerCase())) {
 				response.status(400).json({
 					code: 400,
 					message: "Invalid username"
@@ -68,7 +68,7 @@ const page: Pages = {
 				});
 				return;
 			}
-			if (Object.entries(await client.database.get(`/accounts/${body.username}`)).length > 0) {
+			if (Object.entries(await client.database.get(`/accounts/${body.username.toLowerCase()}`)).length > 0) {
 				response.status(400).json({
 					code: 400,
 					message: "Invalid username",

@@ -31,7 +31,7 @@ const page: Pages = {
 			}
 			const account = await client.login(body.username, body.password);
 			if (!account.success) {
-				response.status(200).json({
+				response.status(400).json({
 					code: 400,
 					message: account.message,
 				});

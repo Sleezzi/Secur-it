@@ -46,7 +46,7 @@ const page: Pages = {
 					user: username,
 					mp
 				}
-			})
+			});
 		} catch (err) {
 			console.error(err);
 		}

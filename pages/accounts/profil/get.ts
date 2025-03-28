@@ -23,7 +23,7 @@ const page: Pages = {
 				admin: profil.admin,
 				friend: (() => {
 					if (!profil.friends) return false;
-					if (profil.friends.list && profil.friends.list.find((user) => user === username)) return "Requested";
+					if (profil.friends.list && Object.entries(profil.friends.list).find(([name]) => name === username)) return "Requested";
 					if (profil.friends.request && profil.friends.request.find((user) => user === username)) return true;
 					return false;
 				})(),
