@@ -26,7 +26,7 @@ const page: Pages = {
 				});
 				return;
 			}
-			if (typeof body.username !== "string" || body.username.length > 15 || /systeme?/.test(body.username.toLowerCase())) {
+			if (typeof body.username !== "string" || /systeme?/.test(body.username.toLowerCase()) || !/[a-zA-Z0-9\-_]{2,15}/.test(body.username.toLowerCase())) {
 				response.status(400).json({
 					code: 400,
 					message: "Invalid username"

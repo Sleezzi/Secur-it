@@ -27,7 +27,7 @@ const page: Pages = {
 				reply("Error", "Internal error, list");
 				return;
 			}
-			client.database.delete(`/accounts/${username}/friends/request/${account.friends.request.indexOf(message.args.toLowerCase())}`);
+			client.database.delete(`/accounts/${username.toLowerCase()}/friends/request/${account.friends.request.indexOf(message.args.toLowerCase())}`);
 
 			const mp = uuid();
 
@@ -40,11 +40,23 @@ const page: Pages = {
 				date: Math.floor(Date.now() / 1000)
 			} as Database["mp"][""][""]);
 
+			reply("Friend accepted", {
+					user: username,
+					mp,
+					avatar: account.avatar || null,
+					online: account.online,
+					verified: account.verified || false
+				}
+			);
+
 			send(message.args.toLowerCase(), {
 				id: "Friend accepted",
 				args: {
 					user: username,
-					mp
+					mp,
+					avatar: account.avatar || null,
+					online: account.online,
+					verified: account.verified || false
 				}
 			});
 		} catch (err) {

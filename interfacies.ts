@@ -39,7 +39,7 @@ export interface Database {
 				killer: string;
 			};
 			token: string;
-			admin?: boolean;
+			verified?: boolean;
 			friends: {
 				list: {
 					[user: string]: string

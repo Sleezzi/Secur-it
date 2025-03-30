@@ -5,8 +5,12 @@ const page: Pages = {
 	method: "WS",
 	async execute(client, username, message, reply, send) {
 		try {
-			const friends_list: Database["accounts"][""]["friends"] = await client.database.get(`/accounts/${username.toLowerCase()}/friends`);
-			if (!friends_list || !friends_list.request) {
+			const friends_list: Database["accounts"][""]["friends"] | null = await client.database.get(`/accounts/${username.toLowerCase()}/friends`);
+			if (!friends_list) {
+				reply("Friends list", null);
+				return;
+			}
+			if ((!friends_list.request || friends_list.request.length === 0) && !friends_list.list) {
 				reply("Friends list", null);
 				return;
 			}
@@ -42,7 +46,7 @@ const page: Pages = {
 					username: name,
 					mp,
 					online: friend.online,
-					verified: friend.admin || false,
+					verified: friend.verified || false,
 					avatar: friend.avatar || null
 				});
 			});
@@ -55,7 +59,7 @@ const page: Pages = {
 				friends.request.push({
 					username: name,
 					online: friend.online,
-					verified: friend.admin || false,
+					verified: friend.verified || false,
 					avatar: friend.avatar || null
 				});
 			});

@@ -32,9 +32,16 @@ const page: Pages = {
 			let list: string[] | null = await client.database.get(`/accounts/${message.args.toLowerCase()}/friends/request`);
 			if (list?.length) list = [];
 			client.database.set(`/accounts/${message.args.toLowerCase()}/friends/request/${list?.length || 0}`, username.toLowerCase());
+			
+			const account: Database["accounts"][""] = await client.database.get(`/accounts/${username.toLowerCase()}`);
 			send(message.args.toLowerCase(), {
 				id: "Friend request",
-				args: username.toLowerCase()
+				args: {
+					user: username,
+					avatar: account.avatar || null,
+					online: account.online,
+					verified: account.verified || false
+				}
 			});
 		} catch (err) {
 			console.error(err);

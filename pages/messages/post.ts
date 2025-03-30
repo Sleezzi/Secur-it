@@ -11,8 +11,7 @@ const page: Pages = {
 			}
 			const { content, channel }: { content: string, channel: {
 				type: "SERVER" | "MP",
-				recipent: string,
-				id: string
+				recipent: string
 			}} = message.args;
 			if (typeof content !== "string" || content.length > 250) {
 				reply("Error", "Invalid message content");
@@ -22,11 +21,11 @@ const page: Pages = {
 				reply("Error", "Invalid \"to\" type");
 				return;
 			}
-			if (!channel.id || typeof channel.id !== "string" || !channel.recipent || typeof channel.recipent !== "string") {
+			if (!channel.recipent || typeof channel.recipent !== "string") {
 				reply("Error", "Invalid \"id\" type");
 				return;
 			}
-			if (channel.type === "SERVER") {
+			if (channel.type.toUpperCase() === "SERVER") {
 				const server: Database["servers"][""] = await client.database.get(`/servers/${channel.recipent}`);
 				if (!server) {
 					reply("Error", "Server not found");
@@ -43,7 +42,7 @@ const page: Pages = {
 				} as Database["servers"][""]["messages"][""]);
 				return;
 			}
-			if (channel.type === "MP") {
+			if (channel.type.toUpperCase() === "MP") {
 				const friend = Object.entries(
 					(await client.database.get(`/accounts/${username.toLowerCase()}/friends/list`) as string[]) || {}
 				).find(([user, mp]) => mp === channel.recipent);
@@ -62,8 +61,8 @@ const page: Pages = {
 					user: username.toLowerCase(),
 					date: Math.floor(Date.now() / 1000)
 				} as Database["mp"][""][""]);
-				send(friend[1].toLowerCase(), {
-					id: "New message",
+				send(friend[0].toLowerCase(), {
+					id: `New message: ${channel.recipent}`,
 					args: {
 						id,
 						message: content,
@@ -71,9 +70,15 @@ const page: Pages = {
 						date: Date.now() / 1000
 					}
 				});
+				reply("Success", {
+					user: username,
+					id,
+					content: content,
+					date: Date.now() / 1000
+				});
 				return;
 			}
-			reply("Success", "Message posted");
+			reply("Error", "Unknow");
 		} catch (err) {
 			console.error(err);
 		}

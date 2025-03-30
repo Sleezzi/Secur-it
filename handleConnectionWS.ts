@@ -3,12 +3,13 @@ import { IncomingMessage } from "http";
 import Client from "./client";
 import { Log } from "./components";
 
-async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebSocket, request: IncomingMessage) {
+async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebSocket & { href?: string }, request: IncomingMessage) {
 	try {
 		if (!request.url?.split("?")[1]) {
 			ws.close();
 			return;
 		}
+		ws.href = request.url;
 		const params = new URLSearchParams(request.url?.split("?")[1])
 		const username = params.get("username");
 		if (!username) {
@@ -75,16 +76,19 @@ async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebS
 					}
 				}, (recipent, content) => {
 					try {
-						wss.clients.forEach((user) => {
-							const params = user.url?.split("?")[1];
-							const username = new URLSearchParams(params).get("username");
-							if (username !== recipent) return;
-							user.send(
-								JSON.stringify({
-									content
-								})
-							);
-						});
+						
+						const user = Array.from((wss as any).clients as (WebSocket & { href: string })[]).find(user => {
+							if (!user.href) return false;
+							const option = user.href.split("?")[1];
+							const username = new URLSearchParams(option).get("username");
+							console.log(username, recipent);
+							
+							if (!username || username.toLowerCase() !== recipent.toLowerCase()) return false;
+							return true;
+						})
+						if (!user) return;
+						
+						user.send(JSON.stringify(content));
 					} catch (err) {
 						console.error(err);
 					}
