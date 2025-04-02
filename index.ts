@@ -38,6 +38,7 @@ app.use(rateLimit({
 	}
 })),
 app.set("etag", false);
+app.set("trust proxy", 1);
 
 const wss = new WebSocketServer({ port: client.config.port.ws });
 
@@ -60,17 +61,17 @@ navigate(pagesFolder, (path: string) => {
 		
 		if (page.method && page.execute as any) { // Check if the file is valid
 			if (page.method === "WS") {
-				Log(`Page %italic%%orange%${page.method}%reset% %green%${file}%reset% %gray%(http://localhost:${client.config.port.ws}; message=${url_path})%reset% loaded`); // Log
+				Log(`Page %italic%%orange%${page.method}%reset% %green%${file}%reset% %gray%(ws://localhost:${client.config.port.ws}; message=${url_path})%reset% loaded`); // Log
 				client.WSMessages.push({
 					name: url_path,
 					execute: page.execute
 				});
 			} else {
-				Log(`Page %italic%%orange%${page.method}%reset% %green%${file}%reset% %gray%(http://localhost:${client.config.port.express}${url_path})%reset% loaded`); // Log
-				app[page.method.toLowerCase() as keyof Express](`${url_path}`, (request: Request, response: Response) => {
+				Log(`Page %italic%%orange%${page.method}%reset% %green%${file}%reset% %gray%(http://localhost:${client.config.port.express}/http${url_path.startsWith("/") ? "" : "/"}${url_path}${url_path})%reset% loaded`); // Log
+				app[page.method.toLowerCase() as keyof Express](`/http${url_path.startsWith("/") ? "" : "/"}${url_path}`, (request: Request, response: Response) => {
 					try {
 						page.execute(request, response, client);
-						Log(`Page %orange%${page.method}%reset% "%green%${file}%reset%" %gray%(http://localhost:${client.config.port.express}${url_path})%reset% used (ip: ${request.ip})`)
+						Log(`Page %orange%${page.method}%reset% "%green%${file}%reset%" %gray%(http://localhost:${client.config.port.express}/http${url_path.startsWith("/") ? "" : "/"}${url_path}${url_path})%reset% used (ip: ${request.ip})`)
 					} catch (err) {
 						console.error(err);
 					}
@@ -85,5 +86,5 @@ navigate(pagesFolder, (path: string) => {
 });
 
 app.listen(client.config.port.express, () => {
-	Log(`Bot API is running at %gray%http://localhost:${client.config.port.express}%reset%`);
+	Log(`Bot API is running at %gray%http://localhost:${client.config.port.express}/http/%reset%`);
 });

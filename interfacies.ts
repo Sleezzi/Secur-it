@@ -77,7 +77,6 @@ export interface Database {
 	}
 }
 export interface Config {
-	token: string;
 	port: {
 		express: number;
 		ws: number;

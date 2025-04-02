@@ -6,24 +6,24 @@ import { Log } from "./components";
 async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebSocket & { href?: string }, request: IncomingMessage) {
 	try {
 		if (!request.url?.split("?")[1]) {
-			ws.close();
+			ws.close(3000, "Missing params");
 			return;
 		}
 		ws.href = request.url;
 		const params = new URLSearchParams(request.url?.split("?")[1])
 		const username = params.get("username");
 		if (!username) {
-			ws.close();
+			ws.close(3000, "Missing \"username\" param");
 			return;
 		}
 		const token = params.get("token");
 		if (!token) {
-			ws.close();
+			ws.close(3000, "Missing \"token\" param");
 			return;
 		}
 		const isValid = await client.authenticate(username, token);
 		if (!isValid.success) {
-			ws.close();
+			ws.close(3000, "Invalid token or username");
 			return;
 		}
 		const account = isValid.account;

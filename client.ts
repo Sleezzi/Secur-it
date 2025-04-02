@@ -5,7 +5,6 @@ import { v4 as uuid } from "uuid";
 
 class Client {
 	config: Config = {
-		token: "",
 		port: {
 			express: 8080,
 			ws: 8081
