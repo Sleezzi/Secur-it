@@ -1,0 +1,85 @@
+#container {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+#form {
+	background: var(--alt-background);
+	height: 20rem;
+	width: 30rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+#form {
+	display: flex;
+	flex-direction: column;
+	padding: 1rem;
+	border-radius: .75rem;
+}
+#form h1 {
+	position: relative;
+}
+#form h1::after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: .25rem;
+	margin: 0 .25rem;
+	background: var(--main-color);
+	animation: sizer 1.5s infinite ease;
+}
+.flex {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+#form input {
+	background: var(--background);
+	height: 1.5rem;
+	width: calc(100% - .5rem * 2);
+}
+.flex input {
+	width: calc(100% - 2.5rem);
+}
+.flex button {
+	width: 2.5rem;
+	margin: 0;
+	padding: .5rem;
+	background: none;
+}
+#login, #register {
+	background: var(--main-color);
+}
+@media screen and (max-width: 1195px) {
+	.container {
+		flex-direction: column;
+	}
+	.container > div {
+		margin: 1rem;
+	}
+	.container h4,
+	.container h5,
+	.container p,
+	.container a {
+		margin: 0;
+		padding: 0;
+	}
+}
+
+
+@keyframes sizer {
+	0% {
+		width: 10%;
+	}
+	50% {
+		width: 30%;
+	}
+	100% {
+		width: 10%;
+	}
+}
