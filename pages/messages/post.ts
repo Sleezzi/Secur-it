@@ -13,7 +13,7 @@ const page: Pages = {
 				type: "SERVER" | "MP",
 				recipent: string
 			}} = message.args;
-			if (typeof content !== "string" || content.length > 250) {
+			if (typeof content !== "string" || /[a-zA-Z0-9²°#@&~""\{\(\\\[\`\]\)\}\-\.\|_,;:\/\*§%^¨îïôöêëéèçù<>!?\$€£]{1,150}/.test(content)) {
 				reply("Error", "Invalid message content");
 				return;
 			}
