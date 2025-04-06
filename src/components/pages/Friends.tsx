@@ -138,7 +138,7 @@ function Friends() {
 							userlist.friends
 							.filter((user) => search.length > 0 ? user.username.toLowerCase().startsWith(search.toLowerCase() as string) : true)
 							.map((user, index) => (
-								<Link to={`/app/mp/${user.mp}`} className={styles.friend} key={user.username}>
+								<Link to={`/mp/${user.mp}`} className={styles.friend} key={user.username}>
 									<div className={styles.avatar}>
 										{
 											user.avatar ?

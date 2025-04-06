@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { register } from "../components/Accounts";
 import styles from "../assets/css/login.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AriaLabel from "../components/AriaLabel";
 
 function Register() {
@@ -13,6 +13,8 @@ function Register() {
 		if (!username.current) return;
 		username.current.focus();
 	}, []);
+
+	const navigate = useNavigate();
 	return ( 
 		<main id={styles.container}>
 			<div id={styles.form} style={{height: "25rem"}}>
@@ -42,7 +44,7 @@ This provides better security, if you're forced to give out a password, give it 
 					}
 					document.cookie = `token=${response.message};`;
 					document.cookie = `username=${username.current.value.toLowerCase()};`;
-					window.location.reload();
+					navigate("/app");
 				}} >Register</button>
 			</div>
 		</main>

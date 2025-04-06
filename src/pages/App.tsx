@@ -5,9 +5,10 @@ import styles from "../assets/css/app.module.css";
 
 
 import { Outlet } from "react-router-dom";
-import { ReciveMessage, SendMessage } from "../interfacies";
+import { MessageBase, ReciveMessage, SendMessage } from "../interfacies";
 import Loading from "./Loading";
 import Channels from "../components/Channels";
+import { disconnect } from "../components/Accounts";
 
 function App({ username, token }: { username: string, token: string }) {
 	const [ws, setWs] = useState<WebSocket | null | "Loading">(null);
@@ -23,7 +24,21 @@ function App({ username, token }: { username: string, token: string }) {
 	if (!ws) {
 		const socket = new WebSocket(`wss://api.sleezzi.fr/ws/?username=${username.toLowerCase()}&token=${token}`);
 		setWs("Loading");
-		socket.onmessage = () => setWs(socket);
+		socket.onmessage = (raw) => {
+			if (typeof raw.data !== "string") {
+				console.log("Unhandled message recieved from server", raw);
+				return;
+			}
+			const message: MessageBase = JSON.parse(raw.data);
+			if (message.id.toLowerCase() === "error") {
+				disconnect().then(() => {
+					window.location.href = "/login";
+					window.location.reload();
+				});
+				return;
+			}
+			setWs(socket);
+		}
 		return (<Loading step={{current: 0, max: 2}} message="Connection au serveur" />);
 	}
 	if (ws === "Loading") {

@@ -5,7 +5,7 @@ import App from "./App.tsx";
 import { HashRouter } from "react-router-dom";
 
 scan({
-	enabled: true
+	enabled: false
 });
 
 createRoot(document.getElementById("root")!).render(

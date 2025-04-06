@@ -103,7 +103,7 @@ function Channels({
 	return (
 		<div id={styles.channels}>
 			<div id={styles.friends}>
-				<Link to="/app/friends" className={styles.friend}>
+				<Link to="/friends" className={styles.friend}>
 					<div className={styles.avatar}>
 						<h1 className={`${styles.avatar} material-symbols-outlined`}>group</h1>
 						{
@@ -118,7 +118,7 @@ function Channels({
 				{
 					channels.map((channel) => (
 						channel.type === "MP" ? 
-						<Link to={`/app/mp/${channel.id}`} className={styles.friend} key={channel.id}>
+						<Link to={`/mp/${channel.id}`} className={styles.friend} key={channel.id}>
 							<div className={styles.avatar}>
 								{
 									channel.avatar ?
@@ -139,7 +139,7 @@ function Channels({
 							</div>
 						</Link>
 						:
-						<Link to={`/app/group/${channel.id}`} className={styles.group} key={channel.id}>
+						<Link to={`/group/${channel.id}`} className={styles.group} key={channel.id}>
 							<div className={styles.avatars}>
 								<img src={channel.avatars[0]} alt={`${channel.name}'s avatar`} className={styles.avatar} />
 								<img src={channel.avatars[1]} alt={`${channel.name}'s avatar`} className={styles.avatar} />
@@ -171,7 +171,7 @@ function Channels({
 						{account.username[0].toUpperCase()}
 						{account.username.slice(1, account.username.length)}
 					</h3>
-					<Link to="/app/settings" className={`${styles.settings} material-symbols-outlined`}>settings</Link>
+					<Link to="/settings" className={`${styles.settings} material-symbols-outlined`}>settings</Link>
 				</div>
 			</div>
 		</div>

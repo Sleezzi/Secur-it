@@ -19,7 +19,7 @@ function Settings() {
 	return ( 
 		<main id={styles.content}>
 			<ul id={styles.selection}>{/* Selection */}
-				<Link to={"/app/settings/profil"}>
+				<Link to={"/settings/profil"}>
 					<span className={`${styles.icon} material-symbols-outlined`}>face</span>
 					<span>Profil</span>
 				</Link>
@@ -36,7 +36,7 @@ function Settings() {
 				<Outlet />
 			</div>
 			<div id={styles.close_container}>
-				<Link id={styles.close} to="/app">X</Link>
+				<Link id={styles.close} to="/">X</Link>
 			</div>
 		</main>
 	);

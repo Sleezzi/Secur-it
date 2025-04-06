@@ -194,6 +194,7 @@ function Conversation({ username }: { username: string }) {
 										</div>
 										<div className={styles.messages}>
 											<p className={styles.text} style={{color: message.state === "posting" ? "var(--alt-color)" : ""}}>
+												Markdown
 												{
 													message.content.split("\n").map((content) => (<>{content}<br /></>))
 												}

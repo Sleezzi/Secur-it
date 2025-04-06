@@ -1,10 +1,14 @@
 import styles from "../assets/css/loading.module.css";
 
-function Loading({ step, message }: { step: {
-	current: number,
-	max: number
-},
-message?: string
+function Loading({
+	step,
+	message
+}: {
+	step: {
+		current: number,
+		max: number
+	},
+	message?: string
 }) {
 	return (
 		<div className={styles.content}>
