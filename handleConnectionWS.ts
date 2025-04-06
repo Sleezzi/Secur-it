@@ -13,20 +13,31 @@ async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebS
 		const params = new URLSearchParams(request.url?.split("?")[1])
 		const username = params.get("username");
 		if (!username) {
+			ws.send(JSON.stringify({
+				id: "error",
+				args: "Invalid auth: missing username param",
+			}));
 			ws.close(3000, "Missing \"username\" param");
 			return;
 		}
 		const token = params.get("token");
 		if (!token) {
+			ws.send(JSON.stringify({
+				id: "error",
+				args: "Invalid auth: missing token param",
+			}));
 			ws.close(3000, "Missing \"token\" param");
 			return;
 		}
 		const isValid = await client.authenticate(username, token);
 		if (!isValid.success) {
+			ws.send(JSON.stringify({
+				id: "error",
+				args: "Invalid auth",
+			}));
 			ws.close(3000, "Invalid token or username");
 			return;
 		}
-		const account = isValid.account;
 		client.database.set(`/accounts/${username.toLowerCase()}/online`, true);
 
 		ws.send(JSON.stringify({
@@ -81,7 +92,6 @@ async function handleConnectionWS(client: Client, wss: WebSocketServer, ws: WebS
 							if (!user.href) return false;
 							const option = user.href.split("?")[1];
 							const username = new URLSearchParams(option).get("username");
-							console.log(username, recipent);
 							
 							if (!username || username.toLowerCase() !== recipent.toLowerCase()) return false;
 							return true;

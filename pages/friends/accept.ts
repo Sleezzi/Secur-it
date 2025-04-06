@@ -36,7 +36,7 @@ const page: Pages = {
 			
 			client.database.set(`/mp/${mp}/0`, {
 				user: "System",
-				message: `${username} accepted ${message.args}`,
+				message: `${username[0].toUpperCase()}${username.slice(1)} accepted ${message.args[0].toUpperCase()}${message.args.slice(1)}`,
 				date: Math.floor(Date.now() / 1000)
 			} as Database["mp"][""][""]);
 
