@@ -24,13 +24,25 @@ function Index({ login }: { login: boolean }) {
 		}
 	}, []);
 	useEffect(() => {
-		if (!document.querySelector(`section[id="${target}"]`)) return;
-		document.querySelector(`section[id="${target}"]`)?.scrollIntoView({ behavior: "smooth" });
+		if (!document.querySelector(`[id="${target}"]`)) return;
+		document.querySelector(`[id="${target}"]`)?.scrollIntoView({ behavior: "smooth" });
 	}, [target]);
 	return (
 		<div id={styles.content}>
-			<header></header>
-			<section id="0">
+			<header>
+				<div id="0">
+					<div className={styles.margin}/>
+					
+					<div className={styles.margin}/>
+				</div>
+				<div className={styles.floating}>
+					<Link to="/">
+						<h1>Secur'it</h1>
+					</Link>
+					<Link className={styles.start} to={login ? "/app" : "/register"}>Commencer à discuter</Link>
+				</div>
+			</header>
+			<section>
 				<div id={styles.background}>
 					<span
 						style={{
@@ -139,7 +151,7 @@ function Index({ login }: { login: boolean }) {
 				</div>
 			</section>
 			<footer id="4">
-				<Link to={login ? "/app" : "/register"}>Commencer à discuter</Link>
+				<Link className={styles.start} to={login ? "/app" : "/register"}>Commencer à discuter</Link>
 			</footer>
 		</div>
 	);
